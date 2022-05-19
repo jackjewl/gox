@@ -5,18 +5,6 @@ type Fib struct {
 	succ int
 }
 
-func Fibonacci(n int) int {
-	if n < 2 {
-		return n
-	}
-	pre, succ := 0, 1
-	for i := 1; i < n; i++ {
-		succ = pre + succ
-		pre = succ - pre
-	}
-	return succ
-}
-
 func (this *Fib) Generate(n int) {
 
 	this.pre = 0
@@ -29,7 +17,7 @@ func (this *Fib) Generate(n int) {
 
 func (this *Fib) Pre() {
 
-	this.pre = this.succ
+	this.pre = this.succ - this.pre
 	this.succ = this.succ - this.pre
 }
 
