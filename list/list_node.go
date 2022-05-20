@@ -1,25 +1,25 @@
 package list
 
-type ListNode struct {
-	data interface{}
-	pred *ListNode
-	succ *ListNode
+type ListNode[T any] struct {
+	data T
+	pred *ListNode[T]
+	succ *ListNode[T]
 }
 
-func (this *ListNode) Data() interface{} {
+func (this *ListNode[T]) Data() T {
 	return this.data
 }
 
-func (this *ListNode) Pred() *ListNode {
+func (this *ListNode[T]) Pred() *ListNode[T] {
 	return this.pred
 }
 
-func (this *ListNode) Succ() *ListNode {
+func (this *ListNode[T]) Succ() *ListNode[T] {
 	return this.succ
 }
 
-func (this *ListNode) InsertAsPred(value interface{}) {
-	listNode := &ListNode{
+func (this *ListNode[T]) InsertAsPred(value T) {
+	listNode := &ListNode[T]{
 		data: value,
 		pred: this.pred,
 		succ: this,
@@ -31,8 +31,8 @@ func (this *ListNode) InsertAsPred(value interface{}) {
 	this.pred = listNode
 }
 
-func (this *ListNode) InsertAsSucc(value interface{}) {
-	listNode := &ListNode{
+func (this *ListNode[T]) InsertAsSucc(value T) {
+	listNode := &ListNode[T]{
 		data: value,
 		pred: this,
 		succ: this.succ,
