@@ -115,7 +115,7 @@ func (this *List[T]) InsertAsLast(value T) {
 
 }
 
-func (this *List[T]) InsertBefroe(position *ListNode[T], value T) {
+func (this *List[T]) InsertBefore(position *ListNode[T], value T) {
 	listNode := &ListNode[T]{
 		data: value,
 		pred: position.pred,
@@ -147,8 +147,8 @@ func (this *List[T]) CopyNodes(startPtr *ListNode[T], nodesNum int) {
 
 }
 
-func (this *List[T]) CopyNodesSection(startNodeIndex int, nodesNum int) {
-	startPtr := this.Get(startNodeIndex)
+func (this *List[T]) CopyNodesSection(src *List[T], startNodeIndex int, nodesNum int) {
+	startPtr := src.Get(startNodeIndex)
 	this.CopyNodes(startPtr, nodesNum)
 	this.size = nodesNum
 }
@@ -274,7 +274,7 @@ func (this *List[T]) SelectionSort(start *ListNode[T], num int, compare func(T, 
 
 	for num > 1 {
 		max := this.SelectMax(head, num, compare)
-		this.InsertBefroe(tail, max.data)
+		this.InsertBefore(tail, max.data)
 		this.Remove(max)
 		tail = tail.pred
 		num--
@@ -296,26 +296,20 @@ func (this *List[T]) SelectMax(startPosition *ListNode[T], num int, compare func
 }
 
 func (this *List[T]) MergeSort(compare func(T, T) int) {
-	this.MergeSortR(this.First(), this.Last(), compare)
+	this.MergeSortR(0, this.Size()-1, compare)
 }
-func (this *List[T]) MergeSortR(start, end *ListNode[T], compare func(T, T) int) {
-	if start == end {
+func (this *List[T]) MergeSortR(start, end int, compare func(T, T) int) {
+	log.Println("rc")
+	if end-start < 2 {
 		return
 	}
 
-	num := 1
-	for ptr := start; ptr != end; ptr = ptr.succ {
-		num++
-	}
-	//log.Println("num", num)
-	mid := num >> 1
-	midPtr := start
-	for i := 1; i < mid; i++ {
-		midPtr = midPtr.succ
-	}
-	this.MergeSortR(start, midPtr, compare)
-	this.MergeSortR(midPtr.succ, end, compare)
-	this.Merge(start, midPtr, end, compare)
+	mid := (start + end) >> 1
+
+	this.MergeSortR(start, mid, compare)
+	this.MergeSortR(mid+1, end, compare)
+	log.Println(this)
+	this.Merge(this.Get(start), this.Get(mid), this.Get(end), compare)
 }
 
 //TODO
@@ -326,35 +320,22 @@ func (this *List[T]) Merge(start, mid, end *ListNode[T], compare func(T, T) int)
 	for leftPtr != mid.succ && midPtr != end.succ {
 		//log.Println(leftPtr.data, midPtr.data)
 		if compare(leftPtr.data, midPtr.data) > 0 {
-			q := midPtr.succ
-			this.InsertAfter(ptr, this.Remove(midPtr))
-			midPtr = q
+			ptr.succ = midPtr
+			midPtr.pred = ptr
+			midPtr = midPtr.succ
 		} else {
-			q := leftPtr.succ
-			log.Println("left ptr", leftPtr.data, leftPtr.succ)
-			this.InsertAfter(ptr, this.Remove(leftPtr))
-			leftPtr = q
+			ptr.succ = leftPtr
+			leftPtr.pred = ptr
+			leftPtr = leftPtr.succ
 		}
 		ptr = ptr.succ
 	}
 	if leftPtr != mid.succ {
-		for leftPtr != mid.succ {
-			q := leftPtr.succ
-			this.InsertAfter(ptr, this.Remove(leftPtr))
-			leftPtr = q
-			ptr = ptr.succ
-
-		}
-		log.Println("left not end")
+		ptr.succ = leftPtr
+		leftPtr.pred = ptr
 	}
 	if midPtr != end.succ {
-		for midPtr != end.succ {
-			q := midPtr.succ
-			this.InsertAfter(ptr, this.Remove(midPtr))
-			midPtr = q
-			ptr = ptr.succ
-
-		}
-		log.Println("right not end")
+		ptr.succ = leftPtr
+		midPtr.pred = ptr
 	}
 }
