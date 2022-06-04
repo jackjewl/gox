@@ -81,7 +81,7 @@ func (this *List[T]) FindSection(target T, sectionNum int, end *ListNode[T], equ
 		}
 		end = end.pred
 	}
-	return nil
+	return end
 }
 
 func (this *List[T]) Find(target T, equal func(T, T) bool) *ListNode[T] {

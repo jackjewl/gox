@@ -2,21 +2,24 @@ package others
 
 import "gox/utils"
 
-func Lcs(a []rune, b []rune) int {
+//递归法求最大公共字符串长度
+func Lcs1(a []rune, b []rune) int {
 
 	if len(a) == 0 || len(b) == 0 {
 		return 0
 	}
 
 	if a[len(a)-1] == b[len(b)-1] {
-		return Lcs(a[:len(a)-1], b[:len(b)-1]) + 1
+		return Lcs1(a[:len(a)-1], b[:len(b)-1]) + 1
 	} else {
-		return utils.Max[int](Lcs(a[:len(a)-1], b), Lcs(a, b[:len(b)-1]))
+		return utils.Max[int](Lcs1(a[:len(a)-1], b), Lcs1(a, b[:len(b)-1]))
 	}
 
 }
 
-func Lcs1(a, b []rune) int {
+//动态规划求最大公共子字符串长度
+func Lcs2(a, b []rune) int {
+
 	table := make([][]int, len(a)+1)
 	for index, _ := range table {
 		table[index] = make([]int, len(b)+1)

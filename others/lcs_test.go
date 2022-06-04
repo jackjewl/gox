@@ -5,14 +5,50 @@ import (
 	"testing"
 )
 
-func TestLcs(t *testing.T) {
-	a := []rune("hello")
-	b := []rune("hello tom")
-	log.Println(Lcs(a, b))
+func TestLcs11(t *testing.T) {
+	type args struct {
+		a []rune
+		b []rune
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "test1",
+			args: args{
+				a: []rune("hello"),
+				b: []rune("hello world"),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			log.Println(Lcs1(tt.args.a, tt.args.b))
+		})
+	}
 }
 
-func TestLcs1(t *testing.T) {
-	a := []rune("hello")
-	b := []rune("hello tom")
-	log.Println(Lcs1(a, b))
+func TestLcs2(t *testing.T) {
+	type args struct {
+		a []rune
+		b []rune
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "test1",
+			args: args{
+				a: []rune("hello"),
+				b: []rune("hello world"),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			log.Println(Lcs2(tt.args.a, tt.args.b))
+		})
+	}
 }
