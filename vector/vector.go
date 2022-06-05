@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
+//向量默认容量
 const (
 	DefaultCapacity = 2
 )
 
-type Rank int
 type Vector[T any] struct {
 	elems    []T
 	size     int
