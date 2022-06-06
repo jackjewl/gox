@@ -1,153 +1,123 @@
+//vector包，向量
 package vector
 
 import (
 	"fmt"
-	"gox/fib"
+	searchSlice "gox/search/slice"
+	"gox/sort/slice"
 	"gox/utils"
 	"math/rand"
-	"strconv"
 	"time"
 )
 
-//向量默认容量
-const (
-	DefaultCapacity = 2
-)
-
-type Vector[T any] struct {
-	elems    []T
-	size     int
-	capacity int
-}
-
-func (this *Vector[T]) String() string {
-	s := "size:" + strconv.Itoa(this.size) + "\n" +
-		"capacity:" + strconv.Itoa(this.capacity) + "\n" +
-		"elems:" + fmt.Sprintf("%v", this.elems[:this.Size()])
-	return s
-}
-
+//constuctor function
 func NewVector[T any](size int) *Vector[T] {
-
-	initCapacity := DefaultCapacity
-	if size > 0 {
-		initCapacity = size << 1
+	if size < 0 {
+		panic("not negative")
 	}
 	vector := &Vector[T]{
-		elems:    make([]T, initCapacity),
-		size:     size,
-		capacity: initCapacity,
+		elems: make([]T, size),
 	}
 	return vector
 }
 
+//vector
+type Vector[T any] struct {
+	elems []T //数据区
+}
+
+//impl Stringer interface
+func (this *Vector[T]) String() string {
+	s := "elems:" + fmt.Sprintf("%v", this.elems[:this.Size()])
+	return s
+}
+
+//size
 func (this *Vector[T]) Size() int {
-	return this.size
+	return len(this.elems)
 }
 
+//copy from slice
 func (this *Vector[T]) CopyFromSlice(src []T) {
-	lenSrc := len(src)
-	this.elems = make([]T, lenSrc<<1)
-	this.capacity = lenSrc << 1
-	for i := 0; i < lenSrc; i++ {
-		this.elems[i] = src[i]
-	}
-	this.size = lenSrc
+	this.elems = make([]T, len(src))
+	copy(this.elems, src)
 }
 
+//copy from a section of vector elems ,from low to high
 func (this *Vector[T]) CopyFromVectorSection(src *Vector[T], low, high int) {
 	this.CopyFromSlice(src.elems[low:high])
 }
 
+//copy from all vector elems
 func (this *Vector[T]) CopyFromVector(src *Vector[T]) {
 	this.CopyFromVectorSection(src, 0, src.Size())
 }
 
+//clone a vector same as this vector itself
 func (this *Vector[T]) Clone() *Vector[T] {
 	vector := &Vector[T]{}
 	vector.CopyFromVector(this)
 	return vector
 }
 
+// get elems by rank
 func (this *Vector[T]) Get(rank int) T {
 	return this.elems[rank]
 }
 
+//put rank value
 func (this *Vector[T]) Put(rank int, value T) {
 	this.elems[rank] = value
 }
 
-func (this *Vector[T]) Expand() {
-	if this.size < this.capacity {
-		return
-	}
-	oldElems := this.elems
-	this.elems = make([]T, this.size<<1)
-	this.capacity = this.size << 1
-	for i := 0; i < this.size; i++ {
-		this.elems[i] = oldElems[i]
-	}
-}
+//insert elems value of params  value into rank params rank position
+func (this *Vector[T]) Insert(rank int, value T) {
 
-func (this *Vector[T]) Shrink() {
-	//less 1/4 cap,shrink,else not shrink
-	if this.capacity<<2 < this.size {
-		return
-	}
-	newElems := make([]T, this.capacity>>1)
-	for i := 0; i < this.size; i++ {
-		newElems[i] = this.elems[i]
-	}
-	this.capacity >>= 1
-	this.elems = newElems
-}
-func (this *Vector[T]) Insert(rank int, value T) T {
-	this.Expand()
-	for i := this.size; i > rank; i-- {
-		this.elems[i] = this.elems[i-1]
-	}
+	this.elems = append(this.elems, value)
+	copy(this.elems[rank+1:], this.elems[rank:])
 	this.elems[rank] = value
-	this.size++
-	return value
 }
 
+//remove elems where rank between low and high
 func (this *Vector[T]) RemoveSection(low, high int) int {
-	for high < this.Size() {
-		this.elems[low] = this.elems[high]
-		high++
-		low++
-	}
-	this.size = low
+
+	copy(this.elems[low:], this.elems[high:])
+	this.elems = this.elems[:len(this.elems)-high+low]
 	return high - low
 }
 
+//remove one elem
 func (this *Vector[T]) Remove(rank int) T {
 	removedValue := this.Get(rank)
 	this.RemoveSection(rank, rank+1)
 	return removedValue
 }
 
+//append one elem
 func (this *Vector[T]) Append(value T) {
-	this.Insert(this.Size(), value)
+	this.elems = append(this.elems, value)
 }
 
+//append elems
 func (this *Vector[T]) Appends(values ...T) {
-	for _, v := range values {
-		this.Append(v)
-	}
+	this.elems = append(this.elems, values...)
 }
 
+//unsort
 func (this *Vector[T]) UnSort() {
 	this.UnSortSection(0, this.Size())
 }
 
+//unsort a section between low and high
 func (this *Vector[T]) UnSortSection(low, high int) {
-	rand.Seed(int64(time.Now().Nanosecond()))
+	rand.Seed(time.Now().UnixNano())
+
 	for i := high - 1; i > low; i-- {
-		utils.Swap[T](&this.elems[i], &this.elems[low+rand.Int()%(high-low)])
+		utils.Swap[T](&this.elems[i], &this.elems[low+rand.Intn(i-low)])
 	}
 }
 
+//traverse and  visit each elems
 func (this *Vector[T]) Traverse(visit func(T) bool) bool {
 	for _, v := range this.elems[:this.Size()] {
 		if !visit(v) {
@@ -157,20 +127,23 @@ func (this *Vector[T]) Traverse(visit func(T) bool) bool {
 	return true
 }
 
-func (this *Vector[T]) Disordered(less func(T, T) bool) int {
+//disordered
+func (this *Vector[T]) Disordered(less func(T, T) bool) bool {
 	counter := 0
 	for i := 1; i < this.Size(); i++ {
 		if less(this.Get(i), this.Get(i-1)) {
 			counter++
 		}
 	}
-	return counter
+	return counter == 0
 }
 
+//unsort find
 func (this *Vector[T]) Find(target T, equal func(T, T) bool) int {
 	return this.FindSection(target, equal, 0, this.Size())
 }
 
+//unsort vector find in section
 func (this *Vector[T]) FindSection(target T, equal func(T, T) bool, low, high int) int {
 	for i := high - 1; i >= low; i-- {
 		if equal(this.Get(i), target) {
@@ -180,9 +153,7 @@ func (this *Vector[T]) FindSection(target T, equal func(T, T) bool, low, high in
 	return low - 1
 }
 
-//func (this *Vector) Search(target interface{}, less func(interface{}, interface{}) bool) int {
-//	return search.BinarySearch(target, this.elems, less)
-//}
+//unsort deduplicate
 func (this *Vector[T]) Deduplicate(equal func(T, T) bool) int {
 	oldSize := this.Size()
 	i := 1
@@ -194,9 +165,10 @@ func (this *Vector[T]) Deduplicate(equal func(T, T) bool) int {
 			i++
 		}
 	}
-	return oldSize - this.size
+	return oldSize - this.Size()
 }
 
+//sorted vector uniquify
 func (this *Vector[T]) Uniquify(equal func(T, T) bool) int {
 	i, j := 0, 1
 	for j < this.Size() {
@@ -206,151 +178,18 @@ func (this *Vector[T]) Uniquify(equal func(T, T) bool) int {
 		}
 		j++
 	}
-	this.size = this.size - (j - i - 1)
+	this.elems = this.elems[:this.Size()-j+i-1]
 	return j - i - 1
 }
 
-//func (this *Vector) Sort(less func(interface{}, interface{}) bool) *Vector {
-//	sort.MergeSort(this.elems, less)
-//	return this
-//}
-
-func (this *Vector[T]) BinarySearchA(target T, compare func(T, T) int) int {
-
-	return this.BinarySearchSectionA(target, compare, 0, this.Size())
-}
-func (this *Vector[T]) BinarySearchSectionA(target T, compare func(T, T) int, low, high int) int {
-	for low < high {
-		mid := (low + high) >> 1
-		if compare(target, this.Get(mid)) < 0 {
-			high = mid
-		} else if compare(target, this.Get(mid)) > 0 {
-			low = mid + 1
-		} else {
-			return mid
-		}
-	}
-	return -1
+//sort
+func (this *Vector[T]) Sort(compare func(T, T) int) {
+	slice.QuickSort[T](this.elems, 0, this.Size(), compare)
 }
 
-func (this *Vector[T]) FibonacciSearch(target T, compare func(T, T) int) int {
-	return this.FibonacciSearchSection(target, compare, 0, this.Size())
-}
+//search
 
-func (this *Vector[T]) FibonacciSearchSection(target T, compare func(T, T) int, low, high int) int {
-	searchLen := high - low
-	fibonacci := fib.Fib{}
-	fibonacci.Generate(searchLen)
-	for low < high {
-		for fibonacci.Get() > high-low {
-			fibonacci.Pre()
-		}
-		//0,1,1,2,3,5,8
+func (this *Vector[T]) Search(target T, less func(T, T) bool) int {
 
-		mid := low + fibonacci.Get() - 1
-		if compare(target, this.Get(mid)) < 0 {
-			high = mid
-		} else if compare(target, this.Get(mid)) > 0 {
-			low = mid + 1
-		} else {
-			return mid
-		}
-
-	}
-	return -1
-}
-
-func (this *Vector[T]) BinarySearch(target T, compare func(T, T) int) int {
-	return this.BinarySearchSection(target, compare, 0, this.Size())
-}
-
-func (this *Vector[T]) BinarySearchSection(target T, compare func(T, T) int, low, high int) int {
-	for low < high {
-		mid := (low + high) >> 1
-
-		if compare(target, this.Get(mid)) < 0 {
-			high = mid
-		} else {
-			low = mid + 1
-		}
-	}
-
-	low--
-	return low
-}
-
-func (this *Vector[T]) BubbleSort(less func(T, T) bool) {
-	this.BubbleSortSection(less, 0, this.Size())
-}
-func (this *Vector[T]) BubbleSortSection(less func(T, T) bool, low, high int) {
-	for !this.Bubble(less, low, high) {
-		high--
-	}
-}
-
-func (this *Vector[T]) Bubble(less func(T, T) bool, low, high int) bool {
-	sorted := true
-	low++
-	for low < high {
-		if less(this.Get(low), this.Get(low-1)) {
-			sorted = false
-			utils.Swap(&this.elems[low], &this.elems[low-1])
-		}
-		low++
-	}
-	return sorted
-}
-
-func (this *Vector[T]) SelectionSort(target T, compare func(T, T) int) {
-
-}
-func (this *Vector[T]) MergeSort(less func(T, T) bool) {
-	this.MergeSortSection(less, 0, this.Size())
-
-}
-func (this *Vector[T]) MergeSortSection(less func(T, T) bool, low, high int) {
-	if high-low <= 1 {
-		return
-	}
-	mid := (low + high) >> 1
-	this.MergeSortSection(less, low, mid)
-	this.MergeSortSection(less, mid, high)
-	this.Merge(less, low, mid, high)
-}
-func (this *Vector[T]) Merge(less func(T, T) bool, low, mid, high int) {
-	i, j, k := low, mid, 0
-	temp := make([]T, high-low)
-	for i < mid && j < high {
-		if less(this.elems[j], this.elems[i]) {
-			temp[k] = this.elems[j]
-			j++
-		} else {
-			temp[k] = this.elems[i]
-			i++
-		}
-		k++
-	}
-
-	for i < mid {
-		temp[k] = this.elems[i]
-		k++
-		i++
-	}
-
-	for j < high {
-		temp[k] = this.elems[j]
-		k++
-		j++
-	}
-
-	for i := 0; i < len(temp); i++ {
-		this.elems[low+i] = temp[i]
-	}
-}
-
-func (this *Vector[T]) HeapSort(target T, compare func(T, T) int) {
-
-}
-func (this *Vector[T]) QuickSort(target T, compare func(T, T) int) {
-
+	return searchSlice.BinarySearch(target, this.elems, less)
 }

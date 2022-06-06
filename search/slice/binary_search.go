@@ -1,10 +1,10 @@
 package slice
 
-func BinarySearch(target interface{}, elems []interface{}, less func(interface{}, interface{}) bool) int {
-	return BinarySearchSection(target, elems, less, 0, len(elems))
+func BinarySearch[T any](target T, elems []T, less func(T, T) bool) int {
+	return BinarySearchSection[T](target, elems, less, 0, len(elems))
 }
 
-func BinarySearchSection(target interface{}, elems []interface{}, less func(interface{}, interface{}) bool, low, high int) int {
+func BinarySearchSection[T any](target T, elems []T, less func(T, T) bool, low, high int) int {
 	var mid int
 	for low <= high {
 		mid = (low + high) >> 1
