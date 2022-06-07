@@ -1,6 +1,6 @@
 package stack
 
-import "gox/vector"
+import "gox/linear/vector"
 
 type SequenceStack[T any] struct {
 	Elems *vector.Vector[T]

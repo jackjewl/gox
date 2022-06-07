@@ -1,6 +1,6 @@
 package adjacent_list
 
-import "gox/list"
+import "gox/linear/list"
 
 const (
 	//顶点状态

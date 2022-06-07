@@ -1,6 +1,6 @@
 package queue
 
-import "gox/list"
+import "gox/linear/list"
 
 //linked queue
 type LinkQueue[T any] struct {

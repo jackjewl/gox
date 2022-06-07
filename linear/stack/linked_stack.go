@@ -1,6 +1,6 @@
 package stack
 
-import "gox/list"
+import "gox/linear/list"
 
 type LinkedStack[T any] struct {
 	Elems *list.List[T]
