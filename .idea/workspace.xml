@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b13d980-784f-462d-9fa8-398bfd614ec8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/others/select_kth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gox.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gox.iml" afterDir="false" />
-    </list>
+    <list default="true" id="3b13d980-784f-462d-9fa8-398bfd614ec8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
