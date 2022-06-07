@@ -1,6 +1,6 @@
 package matrix
 
-import "gox/vector"
+import "gox/linear/vector"
 
 type GraphMatrix[VT any, ET any] struct {
 	vertexNum int

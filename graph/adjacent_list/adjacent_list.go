@@ -1,6 +1,6 @@
 package adjacent_list
 
-import "gox/vector"
+import "gox/linear/vector"
 
 type GraphAdjacentList[VT any, ET any] struct {
 	vertexes vector.Vector[Vertex[VT, ET]]
