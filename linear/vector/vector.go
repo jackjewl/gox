@@ -3,12 +3,8 @@ package vector
 
 import (
 	"fmt"
-<<<<<<< HEAD:vector/vector.go
-	searchSlice "gox/search/slice"
-	"gox/sort/slice"
-=======
-
->>>>>>> refact:linear/vector/vector.go
+	GoxSearch "gox/search"
+	GoxSort "gox/sort"
 	"gox/utils"
 	"math/rand"
 	"time"
@@ -17,39 +13,38 @@ import (
 //constuctor function
 func NewVector[T any](size int) *Vector[T] {
 	if size < 0 {
-		panic("not negative")
+		panic("size can negative")
 	}
 	vector := &Vector[T]{
-		elems: make([]T, size),
+		elements: make([]T, size),
 	}
 	return vector
 }
 
 //vector
 type Vector[T any] struct {
-	elems []T //数据区
+	elements []T //数据区
 }
 
 //impl Stringer interface
 func (this *Vector[T]) String() string {
-	s := "elems:" + fmt.Sprintf("%v", this.elems[:this.Size()])
-	return s
+	return fmt.Sprintf("%v", this.elements)
 }
 
 //size
 func (this *Vector[T]) Size() int {
-	return len(this.elems)
+	return len(this.elements)
 }
 
 //copy from slice
 func (this *Vector[T]) CopyFromSlice(src []T) {
-	this.elems = make([]T, len(src))
-	copy(this.elems, src)
+	this.elements = make([]T, len(src))
+	copy(this.elements, src)
 }
 
 //copy from a section of vector elems ,from low to high
-func (this *Vector[T]) CopyFromVectorSection(src *Vector[T], low, high int) {
-	this.CopyFromSlice(src.elems[low:high])
+func (this *Vector[T]) CopyFromVectorSection(src *Vector[T], start, end int) {
+	this.CopyFromSlice(src.elements[start:end])
 }
 
 //copy from all vector elems
@@ -59,34 +54,34 @@ func (this *Vector[T]) CopyFromVector(src *Vector[T]) {
 
 //clone a vector same as this vector itself
 func (this *Vector[T]) Clone() *Vector[T] {
-	vector := &Vector[T]{}
+	vector := NewVector[T](0)
 	vector.CopyFromVector(this)
 	return vector
 }
 
 // get elems by rank
 func (this *Vector[T]) Get(rank int) T {
-	return this.elems[rank]
+	return this.elements[rank]
 }
 
 //put rank value
-func (this *Vector[T]) Put(rank int, value T) {
-	this.elems[rank] = value
+func (this *Vector[T]) Assign(rank int, value T) {
+	this.elements[rank] = value
 }
 
 //insert elems value of params  value into rank params rank position
 func (this *Vector[T]) Insert(rank int, value T) {
 
-	this.elems = append(this.elems, value)
-	copy(this.elems[rank+1:], this.elems[rank:])
-	this.elems[rank] = value
+	this.elements = append(this.elements, value)
+	copy(this.elements[rank+1:], this.elements[rank:])
+	this.elements[rank] = value
 }
 
 //remove elems where rank between low and high
 func (this *Vector[T]) RemoveSection(low, high int) int {
 
-	copy(this.elems[low:], this.elems[high:])
-	this.elems = this.elems[:len(this.elems)-high+low]
+	copy(this.elements[low:], this.elements[high:])
+	this.elements = this.elements[:len(this.elements)-high+low]
 	return high - low
 }
 
@@ -99,31 +94,31 @@ func (this *Vector[T]) Remove(rank int) T {
 
 //append one elem
 func (this *Vector[T]) Append(value T) {
-	this.elems = append(this.elems, value)
+	this.elements = append(this.elements, value)
 }
 
 //append elems
 func (this *Vector[T]) Appends(values ...T) {
-	this.elems = append(this.elems, values...)
+	this.elements = append(this.elements, values...)
 }
 
 //unsort
 func (this *Vector[T]) UnSort() {
-	this.UnSortSection(0, this.Size())
+	this.unSortSection(0, this.Size())
 }
 
 //unsort a section between low and high
-func (this *Vector[T]) UnSortSection(low, high int) {
+func (this *Vector[T]) unSortSection(start, end int) {
 	rand.Seed(time.Now().UnixNano())
 
-	for i := high - 1; i > low; i-- {
-		utils.Swap[T](&this.elems[i], &this.elems[low+rand.Intn(i-low)])
+	for i := end - 1; i > start; i-- {
+		utils.Swap[T](&this.elements[i], &this.elements[start+rand.Intn(i-start)])
 	}
 }
 
 //traverse and  visit each elems
 func (this *Vector[T]) Traverse(visit func(T) bool) bool {
-	for _, v := range this.elems[:this.Size()] {
+	for _, v := range this.elements[:this.Size()] {
 		if !visit(v) {
 			return false
 		}
@@ -132,37 +127,41 @@ func (this *Vector[T]) Traverse(visit func(T) bool) bool {
 }
 
 //disordered
-func (this *Vector[T]) Disordered(less func(T, T) bool) bool {
+func (this *Vector[T]) Disordered(compare func(T, T) int) bool {
+	return this.adjacentInversePairsCount(compare) == 0
+}
+
+func (this *Vector[T]) adjacentInversePairsCount(compare func(T, T) int) int {
 	counter := 0
 	for i := 1; i < this.Size(); i++ {
-		if less(this.Get(i), this.Get(i-1)) {
+		if compare(this.Get(i), this.Get(i-1)) < 0 {
 			counter++
 		}
 	}
-	return counter == 0
+	return counter
 }
 
 //unsort find
-func (this *Vector[T]) Find(target T, equal func(T, T) bool) int {
-	return this.FindSection(target, equal, 0, this.Size())
+func (this *Vector[T]) Find(target T, compare func(T, T) int) int {
+	return this.findSection(target, compare, 0, this.Size())
 }
 
 //unsort vector find in section
-func (this *Vector[T]) FindSection(target T, equal func(T, T) bool, low, high int) int {
-	for i := high - 1; i >= low; i-- {
-		if equal(this.Get(i), target) {
+func (this *Vector[T]) findSection(target T, compare func(T, T) int, start, end int) int {
+	for i := end - 1; i >= start; i-- {
+		if compare(this.Get(i), target) == 0 {
 			return i
 		}
 	}
-	return low - 1
+	return start - 1
 }
 
 //unsort deduplicate
-func (this *Vector[T]) Deduplicate(equal func(T, T) bool) int {
+func (this *Vector[T]) Deduplicate(compare func(T, T) int) int {
 	oldSize := this.Size()
 	i := 1
 	for i < this.Size() {
-		findBeforeResult := this.FindSection(this.Get(i), equal, 0, i)
+		findBeforeResult := this.findSection(this.Get(i), compare, 0, i)
 		if findBeforeResult >= 0 {
 			this.Remove(findBeforeResult)
 		} else {
@@ -178,28 +177,20 @@ func (this *Vector[T]) Uniquify(equal func(T, T) bool) int {
 	for j < this.Size() {
 		if !equal(this.Get(i), this.Get(j)) {
 			i++
-			this.elems[i] = this.elems[j]
+			this.elements[i] = this.elements[j]
 		}
 		j++
 	}
-	this.elems = this.elems[:this.Size()-j+i-1]
+	this.elements = this.elements[:this.Size()-j+i-1]
 	return j - i - 1
 }
 
-<<<<<<< HEAD:vector/vector.go
 //sort
 func (this *Vector[T]) Sort(compare func(T, T) int) {
-	slice.QuickSort[T](this.elems, 0, this.Size(), compare)
+	GoxSort.QuickSort[T](this.elements, 0, this.Size(), compare)
 }
 
 //search
-
-func (this *Vector[T]) Search(target T, less func(T, T) bool) int {
-
-	return searchSlice.BinarySearch(target, this.elems, less)
+func (this *Vector[T]) Search(target T, compare func(T, T) int) int {
+	return GoxSearch.BinarySearch(target, this.elements, compare)
 }
-=======
-//TODO  sort
-
-//TODO  search
->>>>>>> refact:linear/vector/vector.go

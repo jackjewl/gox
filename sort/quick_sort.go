@@ -1,64 +1,64 @@
-package slice
+package goxSort
 
 import (
 	"gox/utils"
 	"math/rand"
 )
 
-func QuickSort[T any](elems []T, low, high int, compare func(T, T) int) {
-	if high-low < 2 {
+func QuickSort[T any](elements []T, start, end int, compare func(T, T) int) {
+	if end-start < 2 {
 		//log.Println("return")
 		return
 	}
 
-	mid := Partition2[T](elems, low, high, compare)
+	mid := Partition2[T](elements, start, end, compare)
 	//log.Println(mid)
 
-	QuickSort[T](elems, low, mid+1, compare)
-	QuickSort[T](elems, mid+1, high, compare)
+	QuickSort[T](elements, start, mid+1, compare)
+	QuickSort[T](elements, mid+1, end, compare)
 
 }
 
 //tony hore的轴点构造算法
-func Partition1[T any](elems []T, low, high int, compare func(T, T) int) int {
+func Partition1[T any](elements []T, start, end int, compare func(T, T) int) int {
 	//左闭右开区间，故此处high需要减1
-	high -= 1
+	end -= 1
 	//将首元素随机与low,high之内的元素交换，降低最坏情况出现的概率
-	utils.Swap[T](&elems[low], &elems[low+rand.Intn(high-low)])
-	pivot := elems[low]
+	utils.Swap[T](&elements[start], &elements[start+rand.Intn(end-start)])
+	pivot := elements[start]
 
-	for low < high {
+	for start < end {
 
-		for low < high && compare(pivot, elems[high]) <= 0 {
-			high--
+		for start < end && compare(pivot, elements[end]) <= 0 {
+			end--
 		}
-		elems[low] = elems[high]
+		elements[start] = elements[end]
 
-		for low < high && compare(pivot, elems[low]) >= 0 {
-			low++
+		for start < end && compare(pivot, elements[start]) >= 0 {
+			start++
 		}
-		elems[high] = elems[low]
+		elements[end] = elements[start]
 
 	}
-	elems[low] = pivot
-	return low
+	elements[start] = pivot
+	return start
 }
 
 //更简明的轴点构造方法
-func Partition2[T any](elems []T, low, high int, compare func(T, T) int) int {
+func Partition2[T any](elements []T, start, end int, compare func(T, T) int) int {
 	//左闭右开区间，故此处high需要减1
-	high -= 1
+	end -= 1
 	//将首元素随机与low,high之内的元素交换，降低最坏情况出现的概率
-	utils.Swap[T](&elems[low], &elems[low+rand.Intn(high-low)])
-	pivot := elems[low]
-	mid := low
+	utils.Swap[T](&elements[start], &elements[start+rand.Intn(end-start)])
+	pivot := elements[start]
+	mid := start
 
-	for k := low + 1; k <= high; k++ {
-		if compare(elems[k], pivot) < 0 {
+	for k := start + 1; k <= end; k++ {
+		if compare(elements[k], pivot) < 0 {
 			mid++
-			utils.Swap[T](&elems[mid], &elems[k])
+			utils.Swap[T](&elements[mid], &elements[k])
 		}
 	}
-	utils.Swap[T](&elems[low], &elems[mid])
+	utils.Swap[T](&elements[start], &elements[mid])
 	return mid
 }

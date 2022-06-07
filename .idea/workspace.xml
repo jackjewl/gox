@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b13d980-784f-462d-9fa8-398bfd614ec8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/others/select_kth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gox.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gox.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dictionary/hash/bitmap/bitmap.go" beforeDir="false" afterPath="$PROJECT_DIR$/dictionary/hash/bitmap/bitmap.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linear/vector/vector.go" beforeDir="false" afterPath="$PROJECT_DIR$/linear/vector/vector.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search/slice/binary_search.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/bubble_sort.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/bubble_sort.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/merge_sort.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/merge_sort.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/quick_sort.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/quick_sort.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/quick_sort_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/quick_sort_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/shell_sort.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/shell_sort.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/shell_sort_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/shell_sort_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sort/type.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/type.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,23 +40,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/jackjewl/gopath/src/gopl&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/home/jackjewl/gopath/src/gox",
+    "settings.editor.selected.configurable": "preferences.editor"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Go Test.TestModeNumber in gox/others">
     <configuration name="TestHailstone in gox/others" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="gox" />

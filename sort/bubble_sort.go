@@ -1,10 +1,10 @@
-package slice
+package goxSort
 
-func BubbleSort(elems []interface{}, less func(interface{}, interface{}) bool) {
+func BubbleSort(elems []interface{}, compare func(interface{}, interface{}) bool) {
 
-	high := Bubble(elems, less)
+	high := Bubble(elems, compare)
 	for high > 1 {
-		high = Bubble(elems[:high], less)
+		high = Bubble(elems[:high], compare)
 	}
 }
 

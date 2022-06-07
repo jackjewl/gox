@@ -1,4 +1,4 @@
-package slice
+package goxSort
 
 func MergeSort(elems []interface{}, less func(interface{}, interface{}) bool) {
 	MergeSortPart(elems, less, 0, len(elems))

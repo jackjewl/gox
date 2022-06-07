@@ -1,4 +1,4 @@
-package slice
+package goxSort
 
 import (
 	"gox/utils"

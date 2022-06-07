@@ -14,15 +14,15 @@ func NewBitmap(size int) *Bitmap {
 }
 
 func (this *Bitmap) Exist(key int) bool {
-	return this.elems[key>>3]&(0x80>>(key&0x07)) != 0
+	return this.elems[key>>3]&(uint8(8)>>(key%8)) != 0
 }
 
 func (this *Bitmap) Set(key int) {
-	this.elems[key>>3] |= (0x80 >> (key & 0x07))
+	this.elems[key>>3] |= (uint8(8) >> (key % 8))
 }
 
 func (this *Bitmap) Remove(key int) {
-	this.elems[key>>3] &= ^(0x80 >> (key & 0x70))
+	this.elems[key>>3] &= ^(uint8(8) >> (key % 8))
 }
 
 func (this *Bitmap) Size() int {
