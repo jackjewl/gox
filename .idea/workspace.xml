@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="3b13d980-784f-462d-9fa8-398bfd614ec8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/dictionary/hash/bitmap/bitmap.go" beforeDir="false" afterPath="$PROJECT_DIR$/dictionary/hash/bitmap/bitmap.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/linear/vector/vector.go" beforeDir="false" afterPath="$PROJECT_DIR$/linear/vector/vector.go" afterDir="false" />
@@ -16,6 +17,9 @@
       <change beforePath="$PROJECT_DIR$/sort/shell_sort_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/shell_sort_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sort/type.go" beforeDir="false" afterPath="$PROJECT_DIR$/sort/type.go" afterDir="false" />
     </list>
+=======
+    <list default="true" id="3b13d980-784f-462d-9fa8-398bfd614ec8" name="Changes" comment="" />
+>>>>>>> main
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
